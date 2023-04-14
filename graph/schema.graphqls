@@ -1,0 +1,21 @@
+type Employee {
+    _id: String!
+    Name: String!
+    IsTeamLead: Boolean!
+}
+
+type Query {
+    getEmployee(_id: String!): Employee!
+    getEmployees: [Employee!]!
+}
+
+input NewEmployee {
+    Name: String!
+    IsTeamLead: Boolean!
+}
+
+type Mutation {
+    createEmployee(input: NewEmployee!): Employee!
+    updateEmployee(_id: String!, input: NewEmployee!): Employee!
+    deleteEmployee(_id: String!): Employee!
+}
