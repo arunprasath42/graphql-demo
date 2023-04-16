@@ -1,4 +1,22 @@
 <!-- GOLANG-GRAPHQL-CRUD OPERATION -->
+# Project Structure
+
+```bash
+
+├── database
+│   ├── database.go
+├── graph
+│   ├── model
+│   │   └── model_gen.go
+│   ├── generated.go
+│   ├── resolver.go
+│   └── schema.graphqls
+|   └── schema.resolvers.go
+├── go.mod
+├── go.sum
+├── gqlgen.yml
+├── readme.md
+├── server.go
 
 # Golang GraphQL CRUD Operation
 
