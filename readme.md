@@ -1,5 +1,9 @@
 <!-- GOLANG-GRAPHQL-CRUD OPERATION -->
 
+# Golang GraphQL CRUD Operation
+
+This is a simple example of how to implement a CRUD operation using GraphQL and Golang.
+
 ## Prerequisites
 
 - Go 1.18+
@@ -20,9 +24,6 @@
     ├── readme.md
     ├── server.go
 
-# Golang GraphQL CRUD Operation
-
-This is a simple example of how to implement a CRUD operation using GraphQL and Golang.
 
 ## How to run
 
