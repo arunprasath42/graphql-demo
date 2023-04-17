@@ -14,8 +14,18 @@ import (
 var db = database.Connect()
 
 // CreateEmployee is the resolver for the createEmployee field.
+// func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.NewEmployee) (*model.Employee, error) {
+// 	return db.CreateEmployee(input)
+// }
+
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.NewEmployee) (*model.Employee, error) {
-	return db.CreateEmployee(input)
+
+	employee, err := db.CreateEmployee(input)
+	if err != nil {
+		return nil, err
+	}
+	go sendToGRPCServer(employee) // send to gRPC server
+	return employee, nil
 }
 
 // UpdateEmployee is the resolver for the updateEmployee field.

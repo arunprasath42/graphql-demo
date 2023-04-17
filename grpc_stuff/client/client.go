@@ -1,19 +1,44 @@
-package client
+package main
 
-import (
-	"log"
+// type RpcTasksInterface interface {
+// 	MakeCall(service, name string) (string, error)
+// }
 
-	rpc_stuff "github.com/arunprasath42/graphql-live/grpc_stuff"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-)
+// type RpcTasks struct {
+// 	conns RpcTasksInterface
+// }
 
-func ClientConn() rpc_stuff.EmployeeServiceClient {
-	conn, err := grpc.Dial(":50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := rpc_stuff.NewEmployeeServiceClient(conn)
-	return c
-}
+// func NewRpcTasks(conns RpcTasksInterface) *RpcTasks {
+// 	return &RpcTasks{
+// 		conns: conns,
+// 	}
+// }
+
+// func (rt *RpcTasks) MakeCall(service, name string) (string, error) {
+
+// 	return "I'm a silly interface how about you", nil
+// }
+
+// func NewClientConn(addr, name string) *grpc.ClientConn {
+// 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	if err != nil {
+// 		log.Printf("did not connect: %v\n", err)
+// 		panic("couldn't connect")
+// 	}
+// 	defer conn.Close()
+
+// 	return conn
+// }
+
+// func ClientConn(addr string) string {
+// 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// 	if err != nil {
+// 		log.Printf("did not connect: %v\n", err)
+// 	}
+
+// 	defer conn.Close()
+// 	c := NewEmployeeServiceClient(conn)
+
+// 	return
+
+// }
