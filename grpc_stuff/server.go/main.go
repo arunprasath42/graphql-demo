@@ -7,6 +7,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/arunprasath42/graphql-live/graph"
+	"github.com/arunprasath42/graphql-live/graph/model"
 	pb "github.com/arunprasath42/graphql-live/grpc_stuff"
 	"google.golang.org/grpc"
 )
@@ -16,7 +18,21 @@ type server struct {
 }
 
 func (s *server) CreateEmployee(ctx context.Context, in *pb.NewEmployee) (*pb.Employee, error) {
-	return &pb.Employee{Id: "1", Name: in.GetName(), IsTeamLead: in.GetIsTeamLead()}, nil
+
+	r := graph.Resolver{}
+	employee, err := r.Mutation().CreateEmployee(ctx, model.NewEmployee{
+		Name:       in.Name,
+		IsTeamLead: in.IsTeamLead,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &pb.Employee{
+		Id:         employee.ID,
+		Name:       employee.Name,
+		IsTeamLead: employee.IsTeamLead,
+	}, nil
+
 }
 
 func main() {
