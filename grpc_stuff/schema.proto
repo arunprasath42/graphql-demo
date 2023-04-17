@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option go_package = "../grpc-stuff";
+
+package employee;
+
+message NewEmployee {
+  string Name = 1;
+  bool IsTeamLead = 2;
+}
+
+message Employee {
+  string Id = 1;
+  string Name = 2;
+  bool IsTeamLead = 3;
+}
+
+service EmployeeService {
+  rpc CreateEmployee(NewEmployee) returns (Employee);
+  rpc GetEmployeeById(GetEmployeeByIdRequest) returns (Employee);
+  rpc UpdateEmployee(UpdateEmployeeRequest) returns (Employee);
+  rpc DeleteEmployeeById(DeleteEmployeeByIdRequest) returns (Employee);
+  rpc GetEmployeesList(GetEmployeesListRequest) returns (stream Employee);
+}
+
+message GetEmployeeByIdRequest {
+  string Id = 1;
+}
+
+message UpdateEmployeeRequest {
+  string Id = 1;
+  NewEmployee Input = 2;
+}
+
+message DeleteEmployeeByIdRequest {
+  string Id = 1;
+}
+
+message GetEmployeesListRequest {}

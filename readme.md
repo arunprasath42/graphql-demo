@@ -18,11 +18,13 @@ This is a simple example of how to implement a CRUD operation using GraphQL and 
     │   ├── resolver.go
     │   └── schema.graphqls
     |   └── schema.resolvers.go
+    ├── grpc
     ├── go.mod
     ├── go.sum
     ├── gqlgen.yml
     ├── readme.md
-    ├── server.go
+    ├── main.go
+
 
 
 ## How to run
