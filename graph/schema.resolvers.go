@@ -6,41 +6,120 @@ package graph
 
 import (
 	"context"
+	"log"
+	"time"
 
 	"github.com/arunprasath42/graphql-live/database"
 	"github.com/arunprasath42/graphql-live/graph/model"
+	"github.com/arunprasath42/graphql-live/grpc_stuff"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var db = database.Connect()
 
 // CreateEmployee is the resolver for the createEmployee field.
-// func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.NewEmployee) (*model.Employee, error) {
-// 	return db.CreateEmployee(input)
-// }
-
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.NewEmployee) (*model.Employee, error) {
-
-	employee, err := db.CreateEmployee(input)
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return nil, err
+		log.Printf("did not connect: %v\n", err)
 	}
-	go sendToGRPCServer(employee) // send to gRPC server
-	return employee, nil
+	defer conn.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	c := grpc_stuff.NewEmployeeServiceClient(conn)
+	var resp model.Employee
+
+	res, err := c.CreateEmployee(ctx, &grpc_stuff.NewEmployee{Name: input.Name, IsTeamLead: input.IsTeamLead})
+	if err != nil {
+		log.Printf("could create employee: %v\n", err)
+	}
+
+	resp.Name = res.Name
+	resp.IsTeamLead = res.IsTeamLead
+	resp.ID = res.Id
+	return &resp, nil
 }
 
 // UpdateEmployee is the resolver for the updateEmployee field.
 func (r *mutationResolver) UpdateEmployee(ctx context.Context, id string, input model.NewEmployee) (*model.Employee, error) {
-	return db.UpdateEmployee(id, input)
+
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Printf("did not connect: %v\n", err)
+	}
+	defer conn.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	c := grpc_stuff.NewEmployeeServiceClient(conn)
+	var resp model.Employee
+
+	res, err := c.UpdateEmployee(ctx, &grpc_stuff.UpdateEmployeeRequest{Id: id, Input: &grpc_stuff.NewEmployee{Name: input.Name, IsTeamLead: input.IsTeamLead}})
+	if err != nil {
+		log.Printf("could update employee: %v\n", err)
+	}
+
+	resp.Name = res.Name
+	resp.IsTeamLead = res.IsTeamLead
+	resp.ID = res.Id
+	return &resp, nil
 }
 
 // DeleteEmployee is the resolver for the deleteEmployee field.
 func (r *mutationResolver) DeleteEmployee(ctx context.Context, id string) (*model.Employee, error) {
-	return db.DeleteEmployee(id)
+
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Printf("did not connect: %v\n", err)
+	}
+	defer conn.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	c := grpc_stuff.NewEmployeeServiceClient(conn)
+	var resp model.Employee
+
+	res, err := c.DeleteEmployeeById(ctx, &grpc_stuff.DeleteEmployeeByIdRequest{Id: id})
+	if err != nil {
+		log.Printf("could delete employee: %v\n", err)
+	}
+
+	resp.Name = res.Name
+	resp.IsTeamLead = res.IsTeamLead
+	resp.ID = res.Id
+	return &resp, nil
+
 }
 
 // GetEmployee is the resolver for the getEmployee field.
 func (r *queryResolver) GetEmployee(ctx context.Context, id string) (*model.Employee, error) {
-	return db.GetEmployee(id)
+
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Printf("did not connect: %v\n", err)
+	}
+	defer conn.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	c := grpc_stuff.NewEmployeeServiceClient(conn)
+	var resp model.Employee
+
+	res, err := c.GetEmployeeById(ctx, &grpc_stuff.GetEmployeeByIdRequest{Id: id})
+	if err != nil {
+		log.Printf("could not get employee: %v\n", err)
+	}
+
+	resp.Name = res.Name
+	resp.IsTeamLead = res.IsTeamLead
+	resp.ID = res.Id
+	return &resp, nil
 }
 
 // GetEmployees is the resolver for the getEmployees field.
