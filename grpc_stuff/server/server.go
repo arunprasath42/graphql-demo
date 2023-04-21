@@ -11,7 +11,6 @@ import (
 	"github.com/arunprasath42/graphql-live/graph/model"
 	pb "github.com/arunprasath42/graphql-live/grpc_stuff"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 var (
@@ -40,6 +39,7 @@ func (s *server) CreateEmployee(ctx context.Context, in *pb.NewEmployee) (*pb.Em
 		return nil, err
 	}
 
+	log.Printf("Created employee: %v", in.GetName())
 	return &pb.Employee{
 		Name:       employee.Name,
 		IsTeamLead: employee.IsTeamLead,
@@ -56,6 +56,7 @@ func (s *server) UpdateEmployee(ctx context.Context, in *pb.UpdateEmployeeReques
 		return nil, err
 	}
 
+	log.Printf("Updated employee: %v", in.Id)
 	return &pb.Employee{
 		Name:       employee.Name,
 		IsTeamLead: employee.IsTeamLead,
@@ -82,6 +83,7 @@ func (s *server) GetEmployee(ctx context.Context, in *pb.GetEmployeeByIdRequest)
 		return nil, err
 	}
 
+	fmt.Println("employee********", employee)
 	return &pb.Employee{
 		Name:       employee.Name,
 		IsTeamLead: employee.IsTeamLead,
@@ -89,29 +91,17 @@ func (s *server) GetEmployee(ctx context.Context, in *pb.GetEmployeeByIdRequest)
 }
 
 func main() {
-	fmt.Println("Starting server...")
+	log.Println("Starting server...")
 	flag.Parse()
-
 	db := database.Connect()
-
-	fmt.Println("Connected to DB", db)
-
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
-	fmt.Println("Listening on port", *port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
 	s := grpc.NewServer()
-
-	fmt.Println("Registering server")
-
 	pb.RegisterEmployeeServiceServer(s, newServer(*db))
-	fmt.Println("Server registered")
-
-	// Register reflection service on gRPC server.
-	reflection.Register(s)
-
+	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

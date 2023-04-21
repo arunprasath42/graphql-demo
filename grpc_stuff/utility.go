@@ -12,34 +12,6 @@ import (
 
 var db = database.Connect()
 
-// type RpcTasksInterface interface {
-// 	MakeCall(service, name string) (string, error)
-// 	CreateEmployee(ctx context.Context, in *NewEmployee) (*Employee, error)
-// 	UpdateEmployee(ctx context.Context, in *NewEmployee) (*Employee, error)
-// 	DeleteEmployee(ctx context.Context, in *NewEmployee) (*Employee, error)
-// 	GetEmployee(ctx context.Context, in *NewEmployee) (*Employee, error)
-// 	GetEmployees(ctx context.Context, in *NewEmployee) (*Employee, error)
-// }
-
-// type RpcTasks struct {
-// 	conns RpcTasksInterface
-// }
-
-// func NewRpcTasks(conns RpcTasksInterface) *RpcTasks {
-// 	return &RpcTasks{
-// 		conns: conns,
-// 	}
-// }
-
-// func (rt *RpcTasks) MakeCall(service, name string) (string, error) {
-
-// 	return "I'm a silly interface how about you", nil
-// }
-
-// func (rt *RpcTasks) CreateEmployee(ctx context.Context, in *model.NewEmployee) (*model.Employee, error) {
-// 	return db.CreateEmployee(*in)
-// }
-
 func NewClientConn(addr, name string) *grpc.ClientConn {
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {

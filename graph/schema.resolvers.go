@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -105,17 +106,21 @@ func (r *queryResolver) GetEmployee(ctx context.Context, id string) (*model.Empl
 	}
 	defer conn.Close()
 
+	fmt.Println("Connected to server in schema.resolvers.go", conn)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	c := grpc_stuff.NewEmployeeServiceClient(conn)
 	var resp model.Employee
 
+	fmt.Println("Client created in schema.resolvers.go", c)
 	res, err := c.GetEmployeeById(ctx, &grpc_stuff.GetEmployeeByIdRequest{Id: id})
 	if err != nil {
 		log.Printf("could not get employee: %v\n", err)
 	}
 
+	fmt.Println("Response from server in schema.resolvers.go", res)
 	resp.Name = res.Name
 	resp.IsTeamLead = res.IsTeamLead
 	resp.ID = res.Id
