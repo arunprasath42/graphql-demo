@@ -20,6 +20,7 @@ import (
 var db = database.Connect()
 
 // CreateEmployee is the resolver for the createEmployee field.
+// CreateEmployee is the resolver for the createEmployee field.
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.NewEmployee) (*model.Employee, error) {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -89,6 +90,8 @@ func (r *mutationResolver) DeleteEmployee(ctx context.Context, id string) (*mode
 	if err != nil {
 		log.Printf("could delete employee: %v\n", err)
 	}
+
+	fmt.Println("Response from server in schema.resolvers.go", res)
 
 	resp.Name = res.Name
 	resp.IsTeamLead = res.IsTeamLead

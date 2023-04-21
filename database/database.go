@@ -68,12 +68,13 @@ func (db *DB) UpdateEmployee(id string, employee model.NewEmployee) (*model.Empl
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := collection.UpdateByID(ctx, ObjectID, bson.M{"$set": employee})
+	_, err = collection.UpdateByID(ctx, ObjectID, bson.M{"$set": employee})
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return &model.Employee{
-		ID:         res.UpsertedID.(primitive.ObjectID).Hex(),
+		ID:         id,
 		Name:       employee.Name,
 		IsTeamLead: employee.IsTeamLead,
 	}, nil
